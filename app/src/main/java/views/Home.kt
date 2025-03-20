@@ -42,7 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.securis.myapplication.R
 import model.Book
-
+import RecommendedBooksScreen
 
 @Composable
 fun AppNavigation() {
@@ -55,9 +55,7 @@ fun AppNavigation() {
             )
         }
         composable(route = "recommended") {
-            RecommendedBookScreen(
-                navController
-            )
+            RecommendedBooksScreen(navController)
         }
     }
 }
@@ -179,20 +177,20 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier){
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RecommendedBookScreen(navController: NavController, modifier: Modifier = Modifier){
-    Scaffold(topBar = { TopAppBar(title = {Text("recommended")}) }) {
-            padding ->
-        Column(modifier.fillMaxSize()
-            .padding(padding)
-            .padding(16.dp)) {
-            Button(onClick = {navController.navigate("home")}){
-                Text("click")
-            }
-        }
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun RecommendedBookScreen(navController: NavController, modifier: Modifier = Modifier){
+//    Scaffold(topBar = { TopAppBar(title = {Text("recommended")}) }) {
+//            padding ->
+//        Column(modifier.fillMaxSize()
+//            .padding(padding)
+//            .padding(16.dp)) {
+//            Button(onClick = {navController.navigate("home")}){
+//                Text("click")
+//            }
+//        }
+//    }
+//}
 
 
 
