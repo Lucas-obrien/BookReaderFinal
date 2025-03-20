@@ -1,3 +1,65 @@
 <resources>
-    <string name="app_name">BookReaderFinal</string>
+    <string name="app_name">BookReader</string>
+    <string name="reviews">Reviews</string>
+    <string name="newBook">New Book</string>
+    <string name="findBook">Find Book</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="bookReview">It\'s okay</string>
+
+    <string name="Cricket">Cricket</string>
+    <string name="Soccer">Soccer</string>
+
+    <string name="Basketball">Basketball</string>
+    <string name="BasketballReview">An exciting book on basketball strategies</string>
+
+    <string name="Tennis">Tennis</string>
+    <string name="TennisReview">A deep dive into the world of tennis</string>
+
+    <string name="Baseball">Baseball</string>
+    <string name="BaseballReview">A must-read for baseball fans</string>
+
+    <string name="Hockey">Hockey</string>
+    <string name="HockeyReview">An insightful look at hockey history</string>
+
+    <string name="Rugby">Rugby</string>
+    <string name="RugbyReview">A powerful story of rugby legends</string>
+
+    <string name="Golf">Golf</string>
+    <string name="GolfReview">Techniques and strategies for improving your golf game</string>
+
+    <string name="Volleyball">Volleyball</string>
+    <string name="VolleyballReview">The evolution of volleyball and its champions</string>
+
+    <string name="Swimming">Swimming</string>
+    <string name="SwimmingReview">A journey through the world of swimming</string>
+
+    <string name="Cycling">Cycling</string>
+    <string name="CyclingReview">A thrilling ride through cycling history</string>
+
+    <string name="Running">Running</string>
+    <string name="RunningReview">Training secrets from the best runners</string>
+
+    <string name="Boxing">Boxing</string>
+    <string name="BoxingReview">The toughest fights in boxing history</string>
+
+    <string name="Skiing">Skiing</string>
+    <string name="SkiingReview">A complete guide to skiing techniques</string>
+
+    <string name="Surfing">Surfing</string>
+    <string name="SurfingReview">The best surf spots and techniques</string>
+
+    <string name="Skateboarding">Skateboarding</string>
+    <string name="SkateboardingReview">Exploring the culture of skateboarding</string>
+
+    <string name="Climbing">Climbing</string>
+    <string name="ClimbingReview">Conquering mountains and challenges</string>
+
+    <string name="Sailing">Sailing</string>
+    <string name="SailingReview">A voyage through the art of sailing</string>
+
+    <string name="Fencing">Fencing</string>
+    <string name="FencingReview">The art and history of fencing</string>
+
+    <string name="Archery">Archery</string>
+    <string name="ArcheryReview">Mastering precision in archery</string>
 </resources>
