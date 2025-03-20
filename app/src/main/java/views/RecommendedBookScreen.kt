@@ -1,3 +1,4 @@
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,16 +12,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import views.AppNavigation
+//import kotlin.coroutines.jvm.internal.CompletedContinuation.context
+
 
 @Composable
-fun RecommendedBooksScreen() {
+fun RecommendedBooksScreen(navController: NavController, modifier: Modifier = Modifier) {
     val recommendedBooks = listOf(
         "Sports by Roger Sportsguy",
         "Mystery of the Lost City by Jane Doe",
         "Science for Beginners by Dr. Smith",
         "Fantasy Realms by John Writer"
     )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,9 +54,15 @@ fun RecommendedBooksScreen() {
         Spacer(modifier = Modifier.height(20.dp))
 
         // Book Management Button
-        BookButton("BACK") {
-            // Handle book management action
-        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
+                .background(Color.LightGray, RoundedCornerShape(8.dp))
+                .clickable {
+                    navController.navigate("home")
+                },
+        )
     }
 }
 
@@ -74,23 +84,10 @@ fun RecommendedBookItem(bookTitle: String) {
     }
 }
 
-@Composable
-fun BookButton(text: String, onClick: () -> Unit) {
-    Text(
-        text = text,
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.LightGray, shape = RoundedCornerShape(10.dp))
-            .padding(16.dp)
-            .clickable { onClick() },
-        color = Color.Black
-    )
-}
 
 
-@Preview(showBackground = true)
-@Composable
-fun TopicPreview() {
-    RecommendedBooksScreen() }
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun TopicPreview() {
+//    RecommendedBooksScreen("recommended") }
