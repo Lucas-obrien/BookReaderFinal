@@ -6,7 +6,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import data.SecurisBookReaderAppDB
 import data.SecurisBookReaderDao
 import data.User
+import model.Books_Object
 import kotlinx.coroutines.runBlocking
+import model.old_book
 import org.junit.After
 import org.junit.Test
 
@@ -26,7 +28,6 @@ class DbTests {
     private lateinit var SecurisBookReaderDao: SecurisBookReaderDao
 
     @Before
-
     fun createDb() {
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
@@ -60,7 +61,14 @@ class DbTests {
 
     }
 
-
+    @Test
+    @Throws(Exception::class)
+    fun insertAndGetBook() = runBlocking {
+        val Books_Object = Books_Object(title = "Book man", author = "Steven")
+        SecurisBookReaderDao.insertBook(Books_Object)
+        val fetchedBook = SecurisBookReaderDao.getBookById(1)
+        assertEquals("Book man", fetchedBook?.title )
+    }
 
     @Test
     fun addition_isCorrect() {
