@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import model.old_book
+import model.Books_Object
 
 @Dao
 interface SecurisBookReaderDao {
@@ -39,6 +41,24 @@ interface SecurisBookReaderDao {
                 + "username ASC")
         fun getAllUsersLiveData(): LiveData<List<User>>
 
+        @Insert
+        suspend fun insertBook(book: Books_Object)
+
+        @Query("SELECT * FROM books_table WHERE id = :id")
+        suspend fun getBookById(id: Int): Books_Object?
+
+        @Query("DELETE FROM books_table")
+        suspend fun deleteAllBooks()
+
+        @Query("SELECT * FROM books_table ORDER BY "
+                + "title ASC, "
+                + "author DESC ")
+        fun getAllBooks(): List<Books_Object>
+
+        @Query("SELECT * FROM books_table ORDER BY "
+                + "title ASC, "
+                + "author DESC")
+        fun getAllBooksLiveData(): LiveData<List<Books_Object>>
 
 
 }
