@@ -41,8 +41,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.monitor)
-    implementation(libs.androidx.junit.ktx)
+implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    //    implementation(libs.androidx.monitor)
+//    implementation(libs.androidx.junit.ktx)
     //room for DB
 
     kapt ("androidx.room:room-compiler:2.6.1")
@@ -62,7 +64,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.media3.datasource)
+//    implementation(libs.androidx.media3.datasource)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -5,9 +5,12 @@
     <string name="findBook">Find Book</string>
     <string name="recommendations">Recommendations</string>
     <string name="bookReview">It\'s okay</string>
-
+    <string name="manage">Book Management</string>
     <string name="Cricket">Cricket</string>
     <string name="Soccer">Soccer</string>
+    <string name="back_button">Back</string>
+    <string name="no_item_description">N/A</string>
+    <string name="book_entry_title">Add Book</string>
 
     <string name="Basketball">Basketball</string>
     <string name="BasketballReview">An exciting book on basketball strategies</string>
