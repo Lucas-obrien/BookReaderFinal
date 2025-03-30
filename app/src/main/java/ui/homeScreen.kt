@@ -56,13 +56,14 @@ fun BookReaderApp(navController: NavHostController) {
         Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
         Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury")
     )
-
-    HomeBody(
-        bookList = sampleBooks,
-        onItemClick = {},
-        contentPadding = PaddingValues(16.dp)
-    )
-    MenuButton(navController)
+    Column(modifier = Modifier.fillMaxWidth()) {
+        HomeBody(
+            bookList = sampleBooks,
+            onItemClick = {},
+            contentPadding = PaddingValues(16.dp)
+        )
+        MenuButton(navController)
+    }
 }
 
 
@@ -96,7 +97,7 @@ private fun HomeBody(
 }
 
 @Composable
-private fun BookList(
+fun BookList(
     bookList: List<Book>,
     onItemClick: (Book) -> Unit,
     contentPadding: PaddingValues,
@@ -149,21 +150,13 @@ private fun BookItem(
 
 @Composable
 fun MenuButton(navController: NavController) {
-//    Button(
-//        onClick = {
-//            // Navigate to a new screen or destination
-//            navController.navigate("yourDestination")
-//        },
-//        modifier = Modifier.padding(16.dp)
-//    ) {
     Card(
         modifier = Modifier
             .padding(16.dp)
             .clickable {
-                // Navigate to a new screen or destination when clicked
-                navController.navigate("secondScreen")
+                navController.navigate("manageBookScreen")
             },
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
@@ -172,18 +165,20 @@ fun MenuButton(navController: NavController) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-        Text(
-            text = "Manage Books",
-            style = TextStyle(
-                fontSize = 32.sp, // Initial font size
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.fillMaxWidth()
-                .wrapContentWidth(Alignment.CenterHorizontally)
-                .padding(16.dp)
-        )
+                Text(
+                    text = "Manage Books",
+                    style = TextStyle(
+                        fontSize = 32.sp, // Initial font size
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(16.dp)
+                )
+            }
+        }
     }
-    }}
 }
 
 
@@ -196,11 +191,12 @@ fun PreviewHomeBody() {
         Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
         Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury")
     )
-
+    Column(modifier = Modifier.fillMaxWidth()) {
     HomeBody(
         bookList = sampleBooks,
         onItemClick = {},
         contentPadding = PaddingValues(16.dp)
     )
     MenuButton(navController)
+}
 }
