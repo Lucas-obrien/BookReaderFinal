@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ui.BookReaderApp
+//import ui.ManageBookScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController = rememberNavController()) {
@@ -38,8 +39,14 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
         composable("home") {
             BookReaderApp(navController) // Use your homeScreen composable
         }
+        composable("manageBookScreen") {
+            ManageBookScreen(navController) // Use your homeScreen composable
+        }
     }
+
 }
+
+
 //
 //@Composable
 //fun BookNavigationHost(
