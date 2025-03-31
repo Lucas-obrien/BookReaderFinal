@@ -24,4 +24,4 @@ class HomeViewModel(booksRepository: BooksRepository): ViewModel() {
     }
 }
 
-data class HomeUiState(val itemList: List<Book> = listOf())
+data class HomeUiState(val bookList: List<Book> = listOf())
