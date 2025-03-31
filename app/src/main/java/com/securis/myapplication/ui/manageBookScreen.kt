@@ -1,3 +1,9 @@
+/*
+    CURRENTLY WORKING ON IMPLEMENTING FUNCTIONALITY
+ */
+
+
+package com.securis.myapplication.ui
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -9,51 +15,34 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.securis.myapplication.R
-//import data.Book
-
-import androidx.lifecycle.asLiveData
-import com.myapplication.ui.MenuButton
+import com.securis.myapplication.data.AppDatabase
+import com.securis.myapplication.data.Book
+import com.securis.myapplication.ui.home.MenuButton
 
 
 @Composable
 fun ManageBookApp(navController: NavHostController, context: Context) {
-
-
-    // Get the Room database instance
     val db = Room.databaseBuilder(
         context,
         AppDatabase::class.java, "books_database"
     ).build()
 
-    // Observe the list of books from the database
-    val booksLiveData: LiveData<List<Book>> = db.bookDao().getAllBooks().asLiveData()
-    val books = booksLiveData.observeAsState(emptyList()).value
+    val books = db.bookDao().getAllBooks().collectAsState(initial = emptyList()).value
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Replace sampleBooks with the observed books from the database
-        ManageBookBody(
-            bookList = books,
-            onItemClick = {},
-            contentPadding = PaddingValues(16.dp)
-        )
         MenuButton(navController)
     }
 }
-
 
 @Composable
 private fun ManageBookBody(
@@ -91,20 +80,3 @@ private fun ManageBookBody(
 }
 
 
-
-
-@Composable
-fun ManageBookScreen(navController: NavHostController) {
-
-}
-
-
-@Preview
-@Composable
-fun previewManageBook(){
-    val navController = rememberNavController()
-    ManageBookApp(
-        navController,
-        context = TODO()
-    )
-}
