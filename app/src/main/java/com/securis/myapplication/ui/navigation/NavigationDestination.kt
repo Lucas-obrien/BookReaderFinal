@@ -1,4 +1,4 @@
-package ui.navigation
+package com.myapplication.ui.navigation
 
 interface NavigationDestination {
 

@@ -1,3 +1,7 @@
+//package com.myapplication
+package com.myapplication
+
+import BookReaderTheme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import ui.BookReaderApp
+import com.myapplication.ui.BookReaderApp
 
 
 class MainActivity : ComponentActivity() {
@@ -23,18 +27,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                 }
             }
         }
     }
 }
 
-
 @Preview
 @Composable
-fun DisplayTest(){
-    BookReaderTheme(){
+fun DisplayTest() {
+    BookReaderTheme {
         val navController = rememberNavController()
         Surface(
             modifier = Modifier.fillMaxSize(),

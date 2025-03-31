@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.example.inventory.ui.home
-
+package com.securis.myapplication.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import data.Book
-import data.BooksRepository
+import com.securis.myapplication.data.Book
+import com.securis.myapplication.data.BooksRepository
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

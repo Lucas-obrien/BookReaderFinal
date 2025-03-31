@@ -30,7 +30,8 @@ import androidx.navigation.compose.composable
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import ui.BookReaderApp
+import com.myapplication.ui.BookReaderApp
+
 //import ui.ManageBookScreen
 
 @Composable

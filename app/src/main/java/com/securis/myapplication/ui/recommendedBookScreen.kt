@@ -1,4 +1,4 @@
-package ui
+package com.myapplication.ui
 
 class recommendedBookScreen {
 }

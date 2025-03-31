@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,13 +23,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.securis.myapplication.R
-import data.Book
-import ui.BookList
-import ui.BookReaderApp
-import ui.MenuButton
+//import data.Book
+
+import androidx.lifecycle.asLiveData
+import com.myapplication.ui.MenuButton
+
 
 @Composable
 fun ManageBookApp(navController: NavHostController, context: Context) {
+
+
     // Get the Room database instance
     val db = Room.databaseBuilder(
         context,
@@ -36,7 +40,7 @@ fun ManageBookApp(navController: NavHostController, context: Context) {
     ).build()
 
     // Observe the list of books from the database
-    val booksLiveData: LiveData<List<Book>> = db.bookDao().getAllBooks()
+    val booksLiveData: LiveData<List<Book>> = db.bookDao().getAllBooks().asLiveData()
     val books = booksLiveData.observeAsState(emptyList()).value
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -74,7 +78,8 @@ private fun ManageBookBody(
                 contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             ) {
-                items(bookList) { book ->
+                // Use 'key' to uniquely identify each book using its 'id'
+                items(bookList, key = { it.id }) { book ->
                     Text(
                         text = "${book.title} by ${book.author}",
                         modifier = Modifier.clickable { onItemClick(book.id) }
@@ -98,5 +103,8 @@ fun ManageBookScreen(navController: NavHostController) {
 @Composable
 fun previewManageBook(){
     val navController = rememberNavController()
-    ManageBookApp(navController)
+    ManageBookApp(
+        navController,
+        context = TODO()
+    )
 }

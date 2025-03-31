@@ -1,6 +1,5 @@
-package ui
+package com.securis.myapplication.ui.home
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,19 +21,26 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.securis.myapplication.R
-import data.Book
+//import data.book
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import ui.navigation.NavigationDestination
-import androidx.compose.material3.Button
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.securis.myapplication.data.Book
+import com.securis.myapplication.navigation.NavigationDestination
+import com.securis.myapplication.ui.AppViewModelProvider
+import com.securis.myapplication.ui.HomeViewModel
 
+object HomeDestination : NavigationDestination {
+    override val route = "home"
+    override val titleRes = R.string.app_name
+}
 //
 //enum class BookReaderScreen(@StringRes val title: Int){
 //    Home(title = R.string.app_name),
@@ -47,25 +53,33 @@ import androidx.navigation.compose.rememberNavController
 //    override val titleRes = R.string.app_name
 //}
 
-@Composable
-fun BookReaderApp(navController: NavHostController) {
-//    HomeBody()
 
-    val sampleBooks = listOf(
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BookReaderHomeScreen(
+    navigateToBookEntry: () -> Unit,
+    navigateToBookUpdate: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val homeUiState by viewModel.homeUiState.collectAsState()
+    val books = listOf(
         Book(id = 1, title = "1984", author = "George Orwell"),
         Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
         Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury")
     )
+    // Use collected books in the UI
     Column(modifier = Modifier.fillMaxWidth()) {
         HomeBody(
-            bookList = sampleBooks,
+            bookList = books,
             onItemClick = {},
             contentPadding = PaddingValues(16.dp)
         )
-        MenuButton(navController)
+//        MenuButton(navController)
     }
 }
-
 
 @Composable
 private fun HomeBody(
