@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.securis.myapplication.R
-//import data.book
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -60,10 +59,8 @@ fun BookReaderHomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // Handle the state of the top bar scroll behavior
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    // Collect the home UI state from the viewModel
     val homeUiState by viewModel.homeUiState.collectAsState(initial = HomeUiState()) // Provide a default HomeUiState
 
     Scaffold(
@@ -98,27 +95,6 @@ fun BookReaderHomeScreen(
     }
 }
 
-
-
-
-
-
-
-
-//    val books = listOf(
-//        Book(id = 1, title = "1984", author = "George Orwell"),
-//        Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
-//        Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury")
-//    )
-//    // Use collected books in the UI
-//    Column(modifier = Modifier.fillMaxWidth()) {
-//        HomeBody(
-//            bookList = books,
-//            onItemClick = {},
-//            contentPadding = PaddingValues(16.dp)
-//        )
-//        MenuButton(navController)
-//    }
 
 @Composable
 private fun HomeBody(
