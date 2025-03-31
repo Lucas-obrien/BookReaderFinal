@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.securis.myapplication.data.Book
 
 
 import com.securis.myapplication.data.BooksRepository
@@ -36,6 +37,34 @@ class BookEntryViewModel(private val booksRepository: BooksRepository) : ViewMod
     fun saveBook() {
 //        TODO("Not yet implemented")
     }
+
+    data class BookUiState(
+        val bookDetails: BookDetails = BookDetails(),
+        val isEntryValid: Boolean = false
+    )
+
+    data class BookDetails(
+        val id: Int = 0,
+        val title: String = "",
+        val author: String = "",
+    )
+
+    fun BookDetails.toBook(): Book =  Book(
+        id = id,
+        title = title,
+        author = author
+    )
+
+    fun Book.toBookUiState(isEntryValid: Boolean = false): BookUiState = BookUiState(
+        bookDetails = this.toBookDetails(),
+        isEntryValid = isEntryValid
+    )
+
+    fun Book.toBookDetails(): BookDetails = BookDetails(
+        id = id,
+        title = title,
+        author = author
+    )
 
 
 }
