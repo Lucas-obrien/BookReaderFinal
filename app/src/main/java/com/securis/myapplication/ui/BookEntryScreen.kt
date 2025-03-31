@@ -27,7 +27,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.securis.myapplication.R
+import com.securis.myapplication.navigation.NavigationDestination
 import kotlinx.coroutines.launch
+
+
+object BookEntryDestination : NavigationDestination {
+    override val route = "book_entry"
+    override val titleRes = R.string.book_entry_title
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
