@@ -1,11 +1,11 @@
+package com.securis.myapplication.data
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "books")
+@Entity(tableName = "book_database")
 data class Book(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val author: String
 )
-
-
