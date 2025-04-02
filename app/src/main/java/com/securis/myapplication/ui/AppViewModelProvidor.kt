@@ -6,8 +6,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.securis.myapplication.ui.home.HomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 object AppViewModelProvider {
+    @OptIn(ExperimentalCoroutinesApi::class)
     val Factory = viewModelFactory {
         initializer {
             val booksRepository = bookReaderApplication().container.booksRepository
@@ -40,6 +42,11 @@ object AppViewModelProvider {
             val booksRepository = bookReaderApplication().container.booksRepository
             ManageBooksViewModel(booksRepository)
         }
+        initializer {
+            val booksRepository = bookReaderApplication().container.booksRepository
+            SearchBooksViewModel(booksRepository)
+        }
+
     }
 }
 
