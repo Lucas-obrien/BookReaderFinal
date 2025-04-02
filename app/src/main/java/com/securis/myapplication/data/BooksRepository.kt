@@ -25,4 +25,9 @@ interface BooksRepository {
 
     fun getFirstThreeBooksStream(): Flow<List<Book>>
 
+    fun searchBooksByTitle(query: String): Flow<List<Book>>
+    fun searchBooksByAuthor(query: String): Flow<List<Book>>
+    fun searchBooksByGenre(query: String): Flow<List<Book>>
+    fun searchBooksByMinRating(minRating: Float): Flow<List<Book>>
+
 }

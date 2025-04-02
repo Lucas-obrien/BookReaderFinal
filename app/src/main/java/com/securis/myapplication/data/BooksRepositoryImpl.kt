@@ -55,4 +55,20 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
         return bookDao.getFirstThreeBooks()
     }
 
+    override fun searchBooksByTitle(query: String): Flow<List<Book>> {
+        return bookDao.searchBooksByTitle(query)
+    }
+
+    override fun searchBooksByAuthor(query: String): Flow<List<Book>> {
+        return bookDao.searchBooksByAuthor(query)
+    }
+
+    override fun searchBooksByGenre(query: String): Flow<List<Book>> {
+        return bookDao.searchBooksByGenre(query)
+    }
+
+    override fun searchBooksByMinRating(minRating: Float): Flow<List<Book>> {
+        return bookDao.searchBooksByMinRating(minRating)
+    }
+
 }

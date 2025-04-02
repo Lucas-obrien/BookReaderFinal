@@ -29,4 +29,16 @@ interface BookDao {
 
     @Query("SELECT * FROM book_database LIMIT 3")
     fun getFirstThreeBooks(): Flow<List<Book>>
+
+    @Query("SELECT * FROM book_database WHERE title LIKE :title")
+    fun searchBooksByTitle(title: String): Flow<List<Book>>
+
+    @Query("SELECT * FROM book_database WHERE author LIKE :author")
+    fun searchBooksByAuthor(author: String): Flow<List<Book>>
+
+    @Query("SELECT * FROM book_database WHERE genre LIKE :genre")
+    fun searchBooksByGenre(genre: String): Flow<List<Book>>
+
+    @Query("SELECT * FROM book_database WHERE rating >= :minRating")
+    fun searchBooksByMinRating(minRating: Float): Flow<List<Book>>
 }
