@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,12 +35,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.securis.myapplication.data.Book
 import com.securis.myapplication.navigation.NavigationDestination
 import com.securis.myapplication.ui.AppViewModelProvider
@@ -58,6 +55,7 @@ fun BookReaderHomeScreen(
     navigateToBookEntry: () -> Unit,
     navigateToBookUpdate: (Int) -> Unit,
     navigateToManageBooks: () -> Unit,
+    navigateToSearchBooks: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -92,6 +90,7 @@ fun BookReaderHomeScreen(
             bookList = homeUiState.bookList,
             onBookClick = navigateToBookUpdate,
             onManageBooksClick = navigateToManageBooks,
+            onSearchBooksClick = {},
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
@@ -105,6 +104,7 @@ private fun HomeBody(
     bookList: List<Book>,
     onBookClick: (Int) -> Unit,
     onManageBooksClick: () -> Unit,
+    onSearchBooksClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -150,26 +150,6 @@ private fun HomeBody(
             }
 
 
-        }
-    }
-}
-
-@Composable
-fun BookList(
-    bookList: List<Book>,
-    onItemClick: (Book) -> Unit,
-    contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = contentPadding
-    ) {
-        items(items = bookList, key = { it.id }) { book ->
-            BookItem(book = book,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .clickable { onItemClick(book) })
         }
     }
 }
@@ -233,6 +213,32 @@ fun MenuButton(onClick: () -> Unit = {}) {
     }
 }
 
+@Composable
+fun SearchButton(onClick: () -> Unit = {}) {
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_large)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Search Books",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
 
 @Preview
 @Composable
@@ -241,6 +247,7 @@ fun PreviewBookHomeScreen(){
         navigateToBookEntry = { /* mock navigation */ },
         navigateToBookUpdate = { /* mock navigation */ },
         navigateToManageBooks = { /* mock navigation */ },
+        navigateToSearchBooks = { /* mock navigation */ },
         modifier = Modifier,
         viewModel = viewModel(factory = AppViewModelProvider.Factory)
     )
