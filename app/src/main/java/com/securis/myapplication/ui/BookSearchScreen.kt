@@ -22,13 +22,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.securis.myapplication.R
+import com.securis.myapplication.navigation.NavigationDestination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+
+
+object BookSearchDestination : NavigationDestination {
+    override val route = "book_search"
+    override val titleRes = R.string.search_book_title
+    const val bookIdArg = "bookId"
+    val routeWithArgs = "$route/{$bookIdArg}"
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchBookScreen(
-    onBookClick: (Int) -> Unit,
+    onBookSearchClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchBooksViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -64,7 +74,7 @@ fun SearchBookScreen(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(uiState.value.filteredBooks, key = { it.id }) { book ->
-                    BookManageItem(book = book, onClick = { onBookClick(book.id) })
+                    BookManageItem(book = book, onClick = { onBookSearchClick(book.id) })
                 }
             }
         }
