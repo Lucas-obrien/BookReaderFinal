@@ -21,7 +21,7 @@ import com.securis.myapplication.navigation.NavigationDestination
 
 object BookEditDestination : NavigationDestination {
     override val route = "book_edit"
-    override val titleRes = R.string.book_detail_title
+    override val titleRes = R.string.book_edit_title
     const val bookIdArg = "bookId"
     val routeWithArgs = "$route/{$bookIdArg}"
 }
@@ -47,8 +47,11 @@ fun BookEditScreen(
     ) { innerPadding ->
         BookEntryBody(
             bookUiState = viewModel.bookUiState,
-            onBookValueChange = { },
-            onSaveClick = { },
+            onBookValueChange = viewModel::updateUiState,
+            onSaveClick = {
+                viewModel.updateBook()
+                navigateBack()
+            },
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
