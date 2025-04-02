@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -56,6 +57,7 @@ object HomeDestination : NavigationDestination {
 fun BookReaderHomeScreen(
     navigateToBookEntry: () -> Unit,
     navigateToBookUpdate: (Int) -> Unit,
+    navigateToManageBooks: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -84,14 +86,16 @@ fun BookReaderHomeScreen(
                 )
             }
         },
-    ) { innerPadding ->
-        // Check that bookList is not null or empty before passing it to HomeBody
+    )
+    { innerPadding ->
         HomeBody(
-            bookList = homeUiState.bookList ?: emptyList(), // Use an empty list if bookList is null
+            bookList = homeUiState.bookList,
             onBookClick = navigateToBookUpdate,
+            onManageBooksClick = navigateToManageBooks,
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
+
     }
 }
 
@@ -100,27 +104,52 @@ fun BookReaderHomeScreen(
 private fun HomeBody(
     bookList: List<Book>,
     onBookClick: (Int) -> Unit,
+    onManageBooksClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
+        modifier = modifier
+            .padding(contentPadding)
+            .fillMaxSize(),
     ) {
         if (bookList.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_item_description),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(contentPadding),
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize(),
             )
         } else {
-            BookList(
-                bookList = bookList,
-                onItemClick = { onBookClick(it.id) },
-                contentPadding = contentPadding,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-            )
+            Column(
+                modifier = modifier
+                    .padding(contentPadding)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Top
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
+                    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+                ) {
+                    items(bookList, key = { it.id }) { book ->
+                        BookItem(
+                            book = book,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onBookClick(book.id) }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                MenuButton(onClick = onManageBooksClick)
+            }
+
+
         }
     }
 }
@@ -178,34 +207,28 @@ private fun BookItem(
 
 
 @Composable
-fun MenuButton(navController: NavController) {
+fun MenuButton(onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .padding(16.dp)
-            .clickable {
-                navController.navigate("manageBookScreen")
-            },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_large)),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Manage Books",
-                    style = TextStyle(
-                        fontSize = 32.sp, // Initial font size
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                        .padding(16.dp)
-                )
-            }
+            Text(
+                text = "Manage Books",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
@@ -213,30 +236,12 @@ fun MenuButton(navController: NavController) {
 
 @Preview
 @Composable
-fun PreviewHomeBody() {
-    val navController = rememberNavController()
-    val sampleBooks = listOf(
-        Book(id = 1, title = "1984", author = "George Orwell"),
-        Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
-        Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury")
-    )
-    Column(modifier = Modifier.fillMaxWidth()) {
-    HomeBody(
-        bookList = sampleBooks,
-        onBookClick = {},
-        contentPadding = PaddingValues(16.dp)
-    )
-    MenuButton(navController)
-}
-}
-
-@Preview
-@Composable
 fun PreviewBookHomeScreen(){
     BookReaderHomeScreen(
         navigateToBookEntry = { /* mock navigation */ },
         navigateToBookUpdate = { /* mock navigation */ },
+        navigateToManageBooks = { /* mock navigation */ },
         modifier = Modifier,
-        viewModel = viewModel(factory = AppViewModelProvider.Factory) // Use the default viewModel factory
+        viewModel = viewModel(factory = AppViewModelProvider.Factory)
     )
 }
