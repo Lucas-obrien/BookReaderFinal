@@ -1,24 +1,31 @@
 package com.example.inventory.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.securis.myapplication.ui.AppViewModelProvider
 import com.securis.myapplication.ui.BookDetailScreen
 import com.securis.myapplication.ui.BookDetailsDestination
 import com.securis.myapplication.ui.BookEditDestination
 import com.securis.myapplication.ui.BookEditScreen
 import com.securis.myapplication.ui.BookEntryDestination
 import com.securis.myapplication.ui.BookEntryScreen
+import com.securis.myapplication.ui.BookManageDestination
+import com.securis.myapplication.ui.ManageBookScreen
 import com.securis.myapplication.ui.home.BookReaderHomeScreen
 import com.securis.myapplication.ui.home.HomeDestination
+import com.securis.myapplication.ui.home.HomeViewModel
 
 
 // Provides Navigation graph for the application.
-
+ 
 @Composable
 fun BookReaderNavHost(
     navController: NavHostController,
@@ -32,9 +39,10 @@ fun BookReaderNavHost(
         composable(route = HomeDestination.route) {
             BookReaderHomeScreen(
                 navigateToBookEntry = { navController.navigate(BookEntryDestination.route) },
-                navigateToBookUpdate = {
-                    navController.navigate("${BookDetailsDestination.route}/${it}")
-                }
+                navigateToBookUpdate = { navController.navigate("${BookDetailsDestination.route}/$it") },
+                navigateToManageBooks = { navController.navigate(BookManageDestination.route) },
+                modifier = Modifier,
+                viewModel = viewModel(factory = AppViewModelProvider.Factory)
             )
         }
         composable(route = BookEntryDestination.route) {
@@ -50,7 +58,7 @@ fun BookReaderNavHost(
             })
         ) {
             BookDetailScreen(
-                navigateToEditBook = { navController.navigate("${BookEditDestination.route}/$it") },
+                navigateToDetailBook = { navController.navigate("${BookDetailsDestination.route}/$it") },
                 navigateBack = { navController.navigateUp() }
             )
         }
@@ -64,6 +72,17 @@ fun BookReaderNavHost(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )
+        }
+        composable(route = BookManageDestination.route) {
+//            val viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+//            val uiState by viewModel.homeUiState.collectAsState()
+//
+            ManageBookScreen(
+                onBookEditClick = { bookId ->
+                    navController.navigate("${BookEditDestination.route}/$bookId")
+                }
+            )
+
         }
     }
 }
