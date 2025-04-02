@@ -7,8 +7,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.securis.myapplication.ui.home.HomeViewModel
 
-// Factory to generate viewModel for booksRepository
-
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
@@ -30,7 +28,17 @@ object AppViewModelProvider {
         }
 
         initializer {
-            BookEditViewModel(this.createSavedStateHandle())
+            val booksRepository = bookReaderApplication().container.booksRepository
+            BookEditViewModel(
+                this.createSavedStateHandle(),
+                booksRepository
+            )
+        }
+
+        // ✅ New initializer for ManageBooksViewModel
+        initializer {
+            val booksRepository = bookReaderApplication().container.booksRepository
+            ManageBooksViewModel(booksRepository)
         }
     }
 }
