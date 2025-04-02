@@ -26,4 +26,7 @@ interface BookDao {
     @Update
     suspend fun updateBook(book: Book)
 
+
+    @Query("SELECT * FROM book_database LIMIT 3")
+    fun getFirstThreeBooks(): Flow<List<Book>>
 }
