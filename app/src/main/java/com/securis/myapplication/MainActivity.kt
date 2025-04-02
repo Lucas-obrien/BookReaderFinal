@@ -30,8 +30,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val dbHelper = BooksDatabaseHelper(applicationContext)
-                    dbHelper.writableDatabase
                     BookReaderTopApp()
                 }
 
