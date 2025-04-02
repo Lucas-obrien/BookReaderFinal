@@ -1,17 +1,14 @@
-
 package com.securis.myapplication.ui
 
-import BookDetails
-import BookUiState
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.securis.myapplication.data.Book
+import androidx.lifecycle.viewModelScope
+import com.securis.myapplication.data.*
+import kotlinx.coroutines.launch
 
-
-import com.securis.myapplication.data.BooksRepository
-import toBook
 
 class BookEntryViewModel(private val booksRepository: BooksRepository) : ViewModel() {
 
@@ -28,43 +25,49 @@ class BookEntryViewModel(private val booksRepository: BooksRepository) : ViewMod
             title.isNotBlank() && author.isNotBlank()
         }
     }
-    suspend fun saveItem() {
-        if (validateInput()) {
+
+    fun saveBook() {
+        viewModelScope.launch {
             booksRepository.insertBook(bookUiState.bookDetails.toBook())
         }
     }
 
-    fun saveBook() {
-//        TODO("Not yet implemented")
-    }
-
-    data class BookUiState(
-        val bookDetails: BookDetails = BookDetails(),
-        val isEntryValid: Boolean = false
-    )
-
-    data class BookDetails(
-        val id: Int = 0,
-        val title: String = "",
-        val author: String = "",
-    )
-
-    fun BookDetails.toBook(): Book =  Book(
-        id = id,
-        title = title,
-        author = author
-    )
-
-    fun Book.toBookUiState(isEntryValid: Boolean = false): BookUiState = BookUiState(
-        bookDetails = this.toBookDetails(),
-        isEntryValid = isEntryValid
-    )
-
-    fun Book.toBookDetails(): BookDetails = BookDetails(
-        id = id,
-        title = title,
-        author = author
-    )
-
-
 }
+
+data class BookUiState(
+    val bookDetails: BookDetails = BookDetails(),
+    val isEntryValid: Boolean = false
+)
+
+data class BookDetails(
+    val id: Int = 0,
+    val title: String = "",
+    val author: String = "",
+    val review: String = "",
+    val genre: String = "",
+    val rating: Int = 0
+)
+
+fun BookDetails.toBook(): Book =  Book(
+    title = title,
+    author = author,
+    review = review,
+    genre = genre,
+    rating = rating
+)
+
+fun Book.toBookUiState(isEntryValid: Boolean = false): BookUiState = BookUiState(
+    bookDetails = this.toBookDetails(),
+    isEntryValid = isEntryValid
+)
+
+fun Book.toBookDetails(): BookDetails = BookDetails(
+    id = id,
+    title = title,
+    author = author,
+    review = review,
+    genre = genre,
+    rating = rating
+)
+
+

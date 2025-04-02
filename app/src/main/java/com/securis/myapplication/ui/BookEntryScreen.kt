@@ -147,6 +147,51 @@ fun BookInputForm(
             enabled = enabled,
             singleLine = true
         )
+        OutlinedTextField(
+            value = bookDetails.genre,
+            onValueChange = { onValueChange(bookDetails.copy(genre = it)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            label = { Text(stringResource(R.string.book_genre_req)) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = bookDetails.review,
+            onValueChange = { onValueChange(bookDetails.copy(review = it)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            label = { Text(stringResource(R.string.book_review_req)) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = bookDetails.rating.toString(),
+            onValueChange = {
+                val safeValue = it.toIntOrNull() ?: 0
+                onValueChange(bookDetails.copy(rating = safeValue))
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = { Text(stringResource(R.string.book_rating_req)) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
         if (enabled) {
             Text(
                 text = stringResource(R.string.required_fields),
@@ -163,7 +208,7 @@ private fun BookEntryScreenPreview() {
     BookReaderTheme {
         BookEntryBody(bookUiState = BookUiState(
             BookDetails(
-                title = "Title", author = "Robert"
+                title = "Title", author = "Robert", review = "Okay", genre = "Fiction", rating = 10
             )
         ), onBookValueChange = {}, onSaveClick = {})
     }
