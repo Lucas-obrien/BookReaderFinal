@@ -55,7 +55,7 @@ object BookDetailsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailScreen(
-    navigateToEditBook: (Int) -> Unit,
+    navigateToDetailBook: (Int) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BookDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -72,7 +72,7 @@ fun BookDetailScreen(
             )
         }, floatingActionButton = {
             FloatingActionButton(
-                onClick = { navigateToEditBook(0) },
+                onClick = { navigateToDetailBook(0) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
@@ -169,6 +169,27 @@ fun BookDetails(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
             )
+            BookDetailsRow(
+                labelResID = R.string.genre,
+                bookDetail = book.genre,
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
+            BookDetailsRow(
+                labelResID = R.string.review,
+                bookDetail = book.review,
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
+            BookDetailsRow(
+                labelResID = R.string.rating,
+                bookDetail = book.rating.toString(),
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
         }
     }
 }
@@ -212,8 +233,7 @@ fun BookDetailsScreenPreview() {
     BookReaderTheme {
         BookDetailsBody(
             BookDetailsUiState(
-                outOfStock = true,
-                bookDetails = com.securis.myapplication.ui.BookDetails(1, "Pen", "200")
+                bookDetails = BookDetails(1, "Pen", "200")
             ),
             onDelete = {}
         )

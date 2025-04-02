@@ -1,7 +1,7 @@
 package com.securis.myapplication.ui
 
 
-
+import com.securis.myapplication.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,11 +15,12 @@ import kotlinx.coroutines.flow.stateIn
 
 class BookDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    booksRepository: BooksRepository
+    private val booksRepository: BooksRepository
 ) : ViewModel() {
 
 
     private val bookId: Int = checkNotNull(savedStateHandle[BookDetailsDestination.bookIdArg])
+
 
     val uiState: StateFlow<BookDetailsUiState> =
         booksRepository.getBookStream(bookId)
@@ -31,10 +32,6 @@ class BookDetailViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = BookDetailsUiState()
             )
-
-
-
-
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
@@ -42,7 +39,16 @@ class BookDetailViewModel(
 
 
 data class BookDetailsUiState(
-    val outOfStock: Boolean = true,
     val bookDetails: BookDetails = BookDetails()
 )
+
+
+
+
+
+
+
+
+
+
 
