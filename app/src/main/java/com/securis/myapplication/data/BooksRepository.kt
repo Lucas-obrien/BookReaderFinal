@@ -22,4 +22,7 @@ interface BooksRepository {
 
     // Function to insert a single book into the data source
     suspend fun insertBook(book: Book)
+
+    fun getFirstThreeBooksStream(): Flow<List<Book>>
+
 }
