@@ -9,16 +9,16 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
     // Function to insert 10 books into the database
     override suspend fun addBooks() {
         val books = listOf(
-            Book(id = 1, title = "1984", author = "George Orwell"),
-            Book(id = 2, title = "Brave New World", author = "Aldous Huxley"),
-            Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury"),
-            Book(id = 4, title = "The Great Gatsby", author = "F. Scott Fitzgerald"),
-            Book(id = 5, title = "Moby Dick", author = "Herman Melville"),
-            Book(id = 6, title = "War and Peace", author = "Leo Tolstoy"),
-            Book(id = 7, title = "The Catcher in the Rye", author = "J.D. Salinger"),
-            Book(id = 8, title = "Pride and Prejudice", author = "Jane Austen"),
-            Book(id = 9, title = "The Hobbit", author = "J.R.R. Tolkien"),
-            Book(id = 10, title = "The Lord of the Rings", author = "J.R.R. Tolkien")
+            Book(id = 1, title = "1984", author = "George Orwell", review = "Its okay", genre = "Dystopian", rating = 5),
+            Book(id = 2, title = "Brave New World", author = "Aldous Huxley", review = "Its okay", genre = "Science Fiction", rating = 5),
+            Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury", review = "Its okay", genre = "Dystopian", rating = 5),
+            Book(id = 4, title = "The Great Gatsby", author = "F. Scott Fitzgerald", review = "Its okay", genre = "Fiction", rating = 5),
+            Book(id = 5, title = "Moby Dick", author = "Herman Melville", review = "Its okay", genre = "Fiction", rating = 5),
+            Book(id = 6, title = "War and Peace", author = "Leo Tolstoy", review = "Its okay", genre = "Historical Fiction", rating = 5),
+            Book(id = 7, title = "The Catcher in the Rye", author = "J.D. Salinger", review = "Its okay", genre = "Historical Fiction", rating = 5),
+            Book(id = 8, title = "Pride and Prejudice", author = "Jane Austen", review = "Its okay", genre = "Fiction", rating = 5),
+            Book(id = 9, title = "The Hobbit", author = "J.R.R. Tolkien", review = "Its okay", genre = "Fantasy Fiction", rating = 5),
+            Book(id = 10, title = "The Lord of the Rings", author = "J.R.R. Tolkien", review = "Its okay", genre = "Fantasy Fiction", rating = 5)
         )
 
         withContext(Dispatchers.IO) {
@@ -31,7 +31,9 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
         return bookDao.getAllBooks() // This should return a Flow<List<Book>>
     }
 
-
+    override suspend fun updateBook(book: Book) {
+        bookDao.updateBook(book)
+    }
 
     override fun getBookStream(id: Int): Flow<Book?> {
         return bookDao.getBook(id) // Assuming bookDao is a Room DAO
@@ -41,9 +43,6 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
 //        TODO("Not yet implemented")
     }
 
-    override suspend fun updateBook(book: Book) {
-//        TODO("Not yet implemented")
-    }
 
     // Function to insert a single book into the data source
     override suspend fun insertBook(book: Book) {
@@ -51,4 +50,9 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
             bookDao.insertBook(book) // Insert a single book
         }
     }
+
+    override fun getFirstThreeBooksStream(): Flow<List<Book>> {
+        return bookDao.getFirstThreeBooks()
+    }
+
 }
