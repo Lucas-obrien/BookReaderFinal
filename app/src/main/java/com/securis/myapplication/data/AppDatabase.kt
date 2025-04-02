@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Book::class], version = 1, exportSchema = false)
+@Database(entities = [Book::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 
@@ -18,21 +18,23 @@ abstract class AppDatabase : RoomDatabase() {
         private var Instance: AppDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, AppDatabase::class.java, "book_database")
-                    .addCallback(DatabaseCallback(context))
+            return Instance ?: synchronized(this) { // Return Database instance if not initialised, else make database
+                Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "book_database")
+                    .fallbackToDestructiveMigration() // Incase of mismatch, delete and rebuild
+                    .addCallback(object : RoomDatabase.Callback() {
+                        // Only run when DB is first created
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            Instance?.let { database ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    // Prepopulate DB
+                                    database.bookDao().insertAll(SampleBooks.list)
+                                }
+                            }
+                        }
+                    })
                     .build()
                     .also { Instance = it }
-            }
-        }
-
-        private class DatabaseCallback(private val context: Context) : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                // Prepopulate on background thread
-                CoroutineScope(Dispatchers.IO).launch {
-                    getDatabase(context).bookDao().insertAll(SampleBooks.list)
-                }
             }
         }
     }
