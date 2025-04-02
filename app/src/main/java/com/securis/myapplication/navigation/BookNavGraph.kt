@@ -1,8 +1,6 @@
 package com.example.inventory.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -18,14 +16,17 @@ import com.securis.myapplication.ui.BookEditScreen
 import com.securis.myapplication.ui.BookEntryDestination
 import com.securis.myapplication.ui.BookEntryScreen
 import com.securis.myapplication.ui.BookManageDestination
+import com.securis.myapplication.ui.BookSearchDestination
 import com.securis.myapplication.ui.ManageBookScreen
+import com.securis.myapplication.ui.SearchBookScreen
 import com.securis.myapplication.ui.home.BookReaderHomeScreen
 import com.securis.myapplication.ui.home.HomeDestination
-import com.securis.myapplication.ui.home.HomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 // Provides Navigation graph for the application.
  
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun BookReaderNavHost(
     navController: NavHostController,
@@ -41,6 +42,7 @@ fun BookReaderNavHost(
                 navigateToBookEntry = { navController.navigate(BookEntryDestination.route) },
                 navigateToBookUpdate = { navController.navigate("${BookDetailsDestination.route}/$it") },
                 navigateToManageBooks = { navController.navigate(BookManageDestination.route) },
+                navigateToSearchBooks = {navController.navigate(BookSearchDestination.route)},
                 modifier = Modifier,
                 viewModel = viewModel(factory = AppViewModelProvider.Factory)
             )
@@ -83,6 +85,13 @@ fun BookReaderNavHost(
                 }
             )
 
+        }
+        composable(route = BookSearchDestination.route) {
+            SearchBookScreen(
+                onBookSearchClick = { bookId ->
+                    navController.navigate("${BookSearchDestination.route}/$bookId")
+                }
+            )
         }
     }
 }
