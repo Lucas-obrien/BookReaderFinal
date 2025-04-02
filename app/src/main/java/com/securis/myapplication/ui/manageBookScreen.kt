@@ -4,7 +4,6 @@
 
 
 package com.securis.myapplication.ui
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,8 +36,8 @@ import com.securis.myapplication.navigation.NavigationDestination
 object BookManageDestination : NavigationDestination {
     override val route = "book_manage"
     override val titleRes = R.string.edit_book_title
-    const val itemIdArg = "bookId"
-    val routeWithArgs = "$route/{$itemIdArg}"
+    const val bookIdArg = "bookId"
+    val routeWithArgs = "$route/{$bookIdArg}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,40 +116,6 @@ fun BookManageItem(book: Book, onClick: () -> Unit) {
 
 
 
-// REMOVE THIS AS NO LONGER USED
-@Composable
-private fun ManageBookBody(
-    bookList: List<Book>,
-    onItemClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier,
-    ) {
-        if (bookList.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_item_description),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(contentPadding),
-            )
-        } else {
-            LazyColumn(
-                contentPadding = contentPadding,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-            ) {
-                // Use 'key' to uniquely identify each book using its 'id'
-                items(bookList, key = { it.id }) { book ->
-                    Text(
-                        text = "${book.title} by ${book.author}",
-                        modifier = Modifier.clickable { onItemClick(book.id) }
-                    )
-                }
-            }
-        }
-    }
-}
+
 
 
