@@ -8,9 +8,11 @@ data class Book(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val author: String,
-    val review: String,
+    val blurb: String,
     val genre: String,
-    val rating: Int
+    val rating: Int,
+    val review: String? = null,
+    val read: Boolean = false
 ) {
 
 }
