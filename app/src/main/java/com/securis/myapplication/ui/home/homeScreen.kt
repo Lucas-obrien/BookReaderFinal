@@ -90,7 +90,7 @@ fun BookReaderHomeScreen(
             bookList = homeUiState.bookList,
             onBookClick = navigateToBookUpdate,
             onManageBooksClick = navigateToManageBooks,
-            onSearchBooksClick = {},
+            onSearchBooksClick = navigateToSearchBooks,
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
@@ -147,6 +147,7 @@ private fun HomeBody(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MenuButton(onClick = onManageBooksClick)
+                SearchButton(onClick = onSearchBooksClick)
             }
 
 
