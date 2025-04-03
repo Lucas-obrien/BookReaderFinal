@@ -89,7 +89,7 @@ fun BookReaderNavHost(
         composable(route = BookSearchDestination.route) {
             SearchBookScreen(
                 onBookSearchClick = { bookId ->
-                    navController.navigate("${BookSearchDestination.route}/$bookId")
+                    navController.navigate("${BookEditDestination.route}/$bookId")
                 }
             )
         }
