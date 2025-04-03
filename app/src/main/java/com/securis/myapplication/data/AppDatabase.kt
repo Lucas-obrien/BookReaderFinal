@@ -28,7 +28,8 @@ abstract class AppDatabase : RoomDatabase() {
                             Instance?.let { database ->
                                 CoroutineScope(Dispatchers.IO).launch {
                                     // Prepopulate DB
-                                    database.bookDao().insertAll(SampleBooks.list)
+//                                    database.bookDao().insertAll(SampleBooks.list)
+                                    prepopulateBooksFromApi(database.bookDao())
                                 }
                             }
                         }
@@ -39,3 +40,5 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+
+
