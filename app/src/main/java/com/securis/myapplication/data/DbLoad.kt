@@ -15,24 +15,36 @@ suspend fun prepopulateBooksFromApi(bookDao: BookDao) = withContext(Dispatchers.
             .build()
 
         val api = retrofit.create(GoogleBooksApi::class.java)
-        val response = api.searchBooks("fiction") // or "fantasy", or anything you like
 
-        val books = response.items?.mapNotNull { item ->
-            val info = item.volumeInfo
-            val title = info.title ?: return@mapNotNull null
-            val author = info.authors?.joinToString(", ") ?: "Unknown"
+        val totalToFetch = 500
+        val pageSize = 40
+        val allBooks = mutableListOf<Book>()
 
-            Book(
-                title = title,
-                author = author,
-                review = info.description?.take(300) ?: "No review available.",
-                genre = info.categories?.firstOrNull() ?: "Unknown",
-                rating = (info.averageRating ?: 3.0).toInt()
-            )
-        } ?: emptyList()
 
-        bookDao.insertAll(books)
-        Log.d("Prepopulate", "Inserted ${books.size} books from API")
+        // Loop requests until totalToFetch is met, GoogleBooksAPI caps at 40 responses per req
+        for (start in 0 until totalToFetch step pageSize) {
+            val response = api.searchBooks("fiction", maxResults = pageSize, startIndex = start)
+            val books = response.items?.mapNotNull { item ->
+                val info = item.volumeInfo
+                val title = info.title ?: return@mapNotNull null
+                val author = info.authors?.joinToString(", ") ?: "Unknown"
+
+                Book(
+                    title = title,
+                    author = author,
+                    blurb = info.description?.take(300) ?: "No review available.",
+                    genre = info.categories?.firstOrNull() ?: "Unknown",
+                    rating = (info.averageRating ?: 3.0).toInt(),
+                    review = null
+                )
+            } ?: emptyList()
+
+            allBooks.addAll(books)
+        }
+
+        bookDao.insertAll(allBooks)
+        Log.d("Prepopulate", "Inserted ${allBooks.size} books from API")
+
     } catch (e: Exception) {
         Log.e("Prepopulate", "Error fetching books: ${e.localizedMessage}")
     }
