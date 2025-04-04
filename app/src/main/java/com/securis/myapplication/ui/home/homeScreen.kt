@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
@@ -34,9 +35,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.securis.myapplication.data.Book
@@ -91,6 +94,7 @@ fun BookReaderHomeScreen(
             onBookClick = navigateToBookUpdate,
             onManageBooksClick = navigateToManageBooks,
             onSearchBooksClick = navigateToSearchBooks,
+            onRefreshButtonClick = { viewModel.refreshBooksFromApi() },
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
@@ -105,9 +109,13 @@ private fun HomeBody(
     onBookClick: (Int) -> Unit,
     onManageBooksClick: () -> Unit,
     onSearchBooksClick: () -> Unit,
+    onRefreshButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val maxListHeight = screenHeight * 0.5f
+
     Column(
         modifier = modifier
             .padding(contentPadding)
@@ -131,6 +139,7 @@ private fun HomeBody(
             ) {
                 LazyColumn(
                     modifier = Modifier
+                        .heightIn(max = maxListHeight)
                         .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
                     verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
                 ) {
@@ -147,7 +156,13 @@ private fun HomeBody(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 MenuButton(onClick = onManageBooksClick)
+                Spacer(modifier = Modifier.height(16.dp))
                 SearchButton(onClick = onSearchBooksClick)
+                Spacer(modifier = Modifier.height(16.dp))
+                RefreshButton(onClick = onRefreshButtonClick)
+
+
+
             }
 
 
@@ -165,23 +180,28 @@ private fun BookItem(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_large))
+                .height(72.dp), // ✅ Fixed height for uniform size
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = book.title,
+                    text = book.title.take(30), // ✅ Limit title characters
                     style = MaterialTheme.typography.titleLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = book.author,
-                    style = MaterialTheme.typography.titleMedium
+                    text = book.author.take(20), // ✅ Limit author characters
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
-
         }
     }
 }
@@ -230,6 +250,33 @@ fun SearchButton(onClick: () -> Unit = {}) {
         ) {
             Text(
                 text = "Search Books",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun RefreshButton(onClick: () -> Unit = {}) {
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_large)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Refresh Books",
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
