@@ -43,17 +43,23 @@ data class BookDetails(
     val id: Int = 0,
     val title: String = "",
     val author: String = "",
-    val review: String = "",
+    val blurb: String = "",
     val genre: String = "",
-    val rating: Int = 0
+    val rating: Int = 0,
+    val review: String? = "",
+    val read: Boolean = false
 )
 
 fun BookDetails.toBook(): Book =  Book(
+    id = id,
     title = title,
     author = author,
-    review = review,
+    blurb = blurb,
     genre = genre,
-    rating = rating
+    rating = rating,
+    review = review,
+    read = read
+
 )
 
 fun Book.toBookUiState(isEntryValid: Boolean = false): BookUiState = BookUiState(
@@ -65,9 +71,11 @@ fun Book.toBookDetails(): BookDetails = BookDetails(
     id = id,
     title = title,
     author = author,
-    review = review,
+    blurb = blurb,
     genre = genre,
-    rating = rating
+    rating = rating,
+    review = review,
+    read = read
 )
 
 

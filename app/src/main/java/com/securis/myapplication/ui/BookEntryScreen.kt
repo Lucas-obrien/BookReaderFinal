@@ -162,8 +162,8 @@ fun BookInputForm(
             singleLine = true
         )
         OutlinedTextField(
-            value = bookDetails.review,
-            onValueChange = { onValueChange(bookDetails.copy(review = it)) },
+            value = bookDetails.blurb,
+            onValueChange = { onValueChange(bookDetails.copy(blurb = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             label = { Text(stringResource(R.string.book_review_req)) },
             colors = OutlinedTextFieldDefaults.colors(
@@ -208,7 +208,7 @@ private fun BookEntryScreenPreview() {
     BookReaderTheme {
         BookEntryBody(bookUiState = BookUiState(
             BookDetails(
-                title = "Title", author = "Robert", review = "Okay", genre = "Fiction", rating = 10
+                title = "Title", author = "Robert", blurb = "Okay", genre = "Fiction", rating = 10
             )
         ), onBookValueChange = {}, onSaveClick = {})
     }

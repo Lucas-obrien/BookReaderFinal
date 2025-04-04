@@ -1,7 +1,6 @@
 package com.securis.myapplication.ui
 
 
-import com.securis.myapplication.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class BookDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository // removing val here results in errors, ignore warning
 ) : ViewModel() {
 
 

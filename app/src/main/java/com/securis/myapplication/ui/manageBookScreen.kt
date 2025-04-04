@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -71,7 +70,7 @@ fun ManageBookScreen(
         ) {
             if (uiState.value.bookList.isEmpty()) {
                 Text(
-                    text = "I AM HERE", // placeholder or use stringResource(R.string.no_item_description)
+                    text = "I AM HERE",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(contentPadding),
@@ -108,6 +107,14 @@ fun BookManageItem(book: Book, onClick: () -> Unit) {
             )
             Text(
                 text = "by ${book.author}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Genre: ${book.genre}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Review: ${book.blurb}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }

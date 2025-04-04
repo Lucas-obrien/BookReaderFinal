@@ -178,7 +178,7 @@ fun BookDetails(
             )
             BookDetailsRow(
                 labelResID = R.string.review,
-                bookDetail = book.review,
+                bookDetail = book.blurb,
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
