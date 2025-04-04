@@ -2,8 +2,8 @@ package com.securis.myapplication.data
 
 
 import kotlinx.coroutines.flow.Flow
-import kotlin.math.min
 
+// Holding onto this for potential functionality, ignore warning
 class OfflineBooksRepository(private val bookDao: BookDao) : BooksRepository
 {
     override suspend fun addBooks() {
@@ -32,4 +32,8 @@ class OfflineBooksRepository(private val bookDao: BookDao) : BooksRepository
     override fun searchBooksByMinRating(minRating: Float): Flow<List<Book>> = bookDao.searchBooksByMinRating(
         minRating
     )
+
+    override suspend fun refreshBooksFromApi() {
+//        TODO("Not yet implemented")
+    }
 }

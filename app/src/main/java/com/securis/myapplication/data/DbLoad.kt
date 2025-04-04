@@ -16,12 +16,10 @@ suspend fun prepopulateBooksFromApi(bookDao: BookDao) = withContext(Dispatchers.
 
         val api = retrofit.create(GoogleBooksApi::class.java)
 
-        val totalToFetch = 500
+        val totalToFetch = 120
         val pageSize = 40
-        val allBooks = mutableListOf<Book>()
+        val newBooks = mutableListOf<Book>()
 
-
-        // Loop requests until totalToFetch is met, GoogleBooksAPI caps at 40 responses per req
         for (start in 0 until totalToFetch step pageSize) {
             val response = api.searchBooks("fiction", maxResults = pageSize, startIndex = start)
             val books = response.items?.mapNotNull { item ->
@@ -29,23 +27,28 @@ suspend fun prepopulateBooksFromApi(bookDao: BookDao) = withContext(Dispatchers.
                 val title = info.title ?: return@mapNotNull null
                 val author = info.authors?.joinToString(", ") ?: "Unknown"
 
+                // Skip duplicates
+                val exists = bookDao.countByTitleAndAuthor(title, author) > 0
+                if (exists) return@mapNotNull null
+
                 Book(
                     title = title,
                     author = author,
-                    blurb = info.description?.take(300) ?: "No review available.",
+                    blurb = info.description?.take(300) ?: "No blurb available.",
                     genre = info.categories?.firstOrNull() ?: "Unknown",
                     rating = (info.averageRating ?: 3.0).toInt(),
-                    review = null
+                    review = null,
+                    read = false
                 )
             } ?: emptyList()
 
-            allBooks.addAll(books)
+            newBooks.addAll(books)
         }
 
-        bookDao.insertAll(allBooks)
-        Log.d("Prepopulate", "Inserted ${allBooks.size} books from API")
+        bookDao.insertAll(newBooks)
+        Log.d("RefreshBooks", "Added ${newBooks.size} new books.")
 
     } catch (e: Exception) {
-        Log.e("Prepopulate", "Error fetching books: ${e.localizedMessage}")
+        Log.e("RefreshBooks", "Failed to fetch books: ${e.localizedMessage}")
     }
 }
