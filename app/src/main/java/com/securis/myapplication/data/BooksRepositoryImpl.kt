@@ -71,4 +71,8 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
         return bookDao.searchBooksByMinRating(minRating)
     }
 
+    override suspend fun refreshBooksFromApi() {
+        prepopulateBooksFromApi(bookDao)
+    }
+
 }

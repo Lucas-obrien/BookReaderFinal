@@ -29,5 +29,6 @@ interface BooksRepository {
     fun searchBooksByAuthor(query: String): Flow<List<Book>>
     fun searchBooksByGenre(query: String): Flow<List<Book>>
     fun searchBooksByMinRating(minRating: Float): Flow<List<Book>>
+    suspend fun refreshBooksFromApi()
 
 }

@@ -41,4 +41,7 @@ interface BookDao {
 
     @Query("SELECT * FROM book_database WHERE rating >= :minRating")
     fun searchBooksByMinRating(minRating: Float): Flow<List<Book>>
+
+    @Query("SELECT COUNT(*) FROM book_database WHERE title = :title AND author = :author")
+    suspend fun countByTitleAndAuthor(title: String, author: String): Int
 }
