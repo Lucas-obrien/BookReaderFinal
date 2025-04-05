@@ -57,7 +57,6 @@ object HomeDestination : NavigationDestination {
 fun BookReaderHomeScreen(
     navigateToBookEntry: () -> Unit,
     navigateToBookUpdate: (Int) -> Unit,
-    navigateToManageBooks: () -> Unit,
     navigateToSearchBooks: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -92,7 +91,6 @@ fun BookReaderHomeScreen(
         HomeBody(
             bookList = homeUiState.bookList,
             onBookClick = navigateToBookUpdate,
-            onManageBooksClick = navigateToManageBooks,
             onSearchBooksClick = navigateToSearchBooks,
             onRefreshButtonClick = { viewModel.refreshBooksFromApi() },
             modifier = modifier.fillMaxSize(),
@@ -107,7 +105,6 @@ fun BookReaderHomeScreen(
 private fun HomeBody(
     bookList: List<Book>,
     onBookClick: (Int) -> Unit,
-    onManageBooksClick: () -> Unit,
     onSearchBooksClick: () -> Unit,
     onRefreshButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -155,7 +152,6 @@ private fun HomeBody(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                MenuButton(onClick = onManageBooksClick)
                 Spacer(modifier = Modifier.height(16.dp))
                 SearchButton(onClick = onSearchBooksClick)
                 Spacer(modifier = Modifier.height(16.dp))
@@ -202,34 +198,6 @@ private fun BookItem(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-        }
-    }
-}
-
-
-@Composable
-fun MenuButton(onClick: () -> Unit = {}) {
-    Card(
-        modifier = Modifier
-            .padding(16.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_large)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Manage Books",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(16.dp)
-            )
         }
     }
 }
@@ -294,7 +262,6 @@ fun PreviewBookHomeScreen(){
     BookReaderHomeScreen(
         navigateToBookEntry = { /* mock navigation */ },
         navigateToBookUpdate = { /* mock navigation */ },
-        navigateToManageBooks = { /* mock navigation */ },
         navigateToSearchBooks = { /* mock navigation */ },
         modifier = Modifier,
         viewModel = viewModel(factory = AppViewModelProvider.Factory)
