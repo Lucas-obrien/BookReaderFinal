@@ -3,6 +3,7 @@ package com.securis.myapplication.ui
 import BookReaderTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.securis.myapplication.R
 import com.securis.myapplication.navigation.NavigationDestination
 import kotlinx.coroutines.launch
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+
 
 
 object BookEntryDestination : NavigationDestination {
@@ -97,6 +101,7 @@ fun BookEntryBody(
             onValueChange = onBookValueChange,
             modifier = Modifier.fillMaxWidth()
         )
+
         // NEED TO ADD REVIEW AND RATING FIELD, ADDITIONALLY GENRE
         Button(
             onClick = onSaveClick,
@@ -162,8 +167,8 @@ fun BookInputForm(
             singleLine = true
         )
         OutlinedTextField(
-            value = bookDetails.blurb,
-            onValueChange = { onValueChange(bookDetails.copy(blurb = it)) },
+            value = bookDetails.userReview.toString(),
+            onValueChange = { onValueChange(bookDetails.copy(userReview = it)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             label = { Text(stringResource(R.string.book_review_req)) },
             colors = OutlinedTextFieldDefaults.colors(
@@ -176,10 +181,10 @@ fun BookInputForm(
             singleLine = true
         )
         OutlinedTextField(
-            value = bookDetails.rating.toString(),
+            value = bookDetails.userRating.toString(),
             onValueChange = {
                 val safeValue = it.toIntOrNull() ?: 0
-                onValueChange(bookDetails.copy(rating = safeValue))
+                onValueChange(bookDetails.copy(userRating = safeValue))
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = { Text(stringResource(R.string.book_rating_req)) },
@@ -192,6 +197,18 @@ fun BookInputForm(
             enabled = enabled,
             singleLine = true
         )
+        Row(
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = bookDetails.read,
+                onCheckedChange = { checked ->
+                    onValueChange(bookDetails.copy(read = checked))
+                },
+                colors = CheckboxDefaults.colors()
+            )
+            Text(text = "Mark as Read")
+        }
         if (enabled) {
             Text(
                 text = stringResource(R.string.required_fields),

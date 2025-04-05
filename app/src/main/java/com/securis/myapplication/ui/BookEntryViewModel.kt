@@ -46,7 +46,8 @@ data class BookDetails(
     val blurb: String = "",
     val genre: String = "",
     val rating: Int = 0,
-    val review: String? = "",
+    val userReview: String = "",
+    val userRating: Int = 0,
     val read: Boolean = false
 )
 
@@ -56,8 +57,9 @@ fun BookDetails.toBook(): Book =  Book(
     author = author,
     blurb = blurb,
     genre = genre,
-    rating = rating,
-    review = review,
+    ApiRating = rating,
+    userReview = userReview,
+    userRating = userRating,
     read = read
 
 )
@@ -73,8 +75,9 @@ fun Book.toBookDetails(): BookDetails = BookDetails(
     author = author,
     blurb = blurb,
     genre = genre,
-    rating = rating,
-    review = review,
+    rating = ApiRating,
+    userReview = userReview ?:"",
+    userRating = userRating ?:0,
     read = read
 )
 
