@@ -27,7 +27,12 @@ interface BookDao {
     suspend fun updateBook(book: Book)
 
 
-    @Query("SELECT * FROM book_database LIMIT 3")
+    @Query("""
+            SELECT * FROM book_database AS b
+            WHERE b.read != 1
+            ORDER BY userRating DESC
+            LIMIT 3
+            """)
     fun getFirstThreeBooks(): Flow<List<Book>>
 
     @Query("SELECT * FROM book_database WHERE title LIKE :title")
@@ -39,7 +44,7 @@ interface BookDao {
     @Query("SELECT * FROM book_database WHERE genre LIKE :genre")
     fun searchBooksByGenre(genre: String): Flow<List<Book>>
 
-    @Query("SELECT * FROM book_database WHERE rating >= :minRating")
+    @Query("SELECT * FROM book_database WHERE ApiRating >= :minRating")
     fun searchBooksByMinRating(minRating: Float): Flow<List<Book>>
 
     @Query("SELECT COUNT(*) FROM book_database WHERE title = :title AND author = :author")
