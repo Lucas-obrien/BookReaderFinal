@@ -1,5 +1,6 @@
 
 package com.securis.myapplication.ui
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import androidx.compose.ui.unit.dp
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.securis.myapplication.R
+import com.securis.myapplication.data.Book
 import com.securis.myapplication.navigation.NavigationDestination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -34,6 +38,7 @@ object BookSearchDestination : NavigationDestination {
     const val bookIdArg = "bookId"
     val routeWithArgs = "$route/{$bookIdArg}"
 }
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -74,9 +79,40 @@ fun SearchBookScreen(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 items(uiState.value.filteredBooks, key = { it.id }) { book ->
-                    BookManageItem(book = book, onClick = { onBookSearchClick(book.id) })
+                    BookSearchItem(book = book, onClick = { onBookSearchClick(book.id) })
                 }
             }
         }
     }
 }
+
+@Composable
+fun BookSearchItem(book: Book, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = book.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "by ${book.author}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Genre: ${book.genre}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+//            Text(
+//                text = "Review: ${book.ApiReview}",
+//                style = MaterialTheme.typography.bodyMedium
+//            )
+        }
+    }
+}
+
