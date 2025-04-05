@@ -55,7 +55,7 @@ object BookDetailsDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetailScreen(
-    navigateToDetailBook: (Int) -> Unit,
+    navigateToEditBook: (Int) -> Unit,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BookDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -70,30 +70,23 @@ fun BookDetailScreen(
                 canNavigateBack = true,
                 navigateUp = navigateBack
             )
-        }, floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navigateToDetailBook(0) },
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = stringResource(R.string.edit_book_title),
-                )
-            }
-        }, modifier = modifier
+        },
+        modifier = modifier
     ) { innerPadding ->
         BookDetailsBody(
             bookDetailsUiState = uiState.value,
-            onDelete = { },
+            onDelete = { book ->
+                viewModel.deleteBook(book)
+                navigateBack()
+                       },
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
                 )
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            onBookEditClick = {id -> navigateToEditBook(id) }
         )
     }
 }
@@ -102,9 +95,11 @@ fun BookDetailScreen(
 @Composable
 fun BookDetailsBody(
     bookDetailsUiState: BookDetailsUiState,
-    onDelete: () -> Unit,
+    onBookEditClick: (Int) -> Unit,
+    onDelete: (Book) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val book = bookDetailsUiState.bookDetails.toBook()
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
@@ -116,6 +111,13 @@ fun BookDetailsBody(
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedButton(
+            onClick = { onBookEditClick(bookDetailsUiState.bookDetails.id)},
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(R.string.edit_book))
+        }
+        OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
@@ -126,12 +128,13 @@ fun BookDetailsBody(
             DeleteConfirmationDialog(
                 onDeleteConfirm = {
                     deleteConfirmationRequired = false
-                    onDelete()
+                    onDelete(book)
                 },
                 onDeleteCancel = { deleteConfirmationRequired = false },
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
             )
         }
+
     }
 }
 
@@ -177,15 +180,29 @@ fun BookDetails(
                 )
             )
             BookDetailsRow(
-                labelResID = R.string.review,
-                bookDetail = book.blurb,
+                labelResID = R.string.your_review,
+                bookDetail = book.userReview?:"",
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
             )
             BookDetailsRow(
                 labelResID = R.string.rating,
-                bookDetail = book.rating.toString(),
+                bookDetail = book.ApiRating.toString(),
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
+            BookDetailsRow(
+                labelResID = R.string.user_rating,
+                bookDetail = book.userRating.toString(),
+                modifier = Modifier.padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_medium)
+                )
+            )
+            BookDetailsRow(
+                labelResID = R.string.user_read,
+                bookDetail = if (book.read) "Yes" else "No",
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_medium)
                 )
@@ -235,7 +252,9 @@ fun BookDetailsScreenPreview() {
             BookDetailsUiState(
                 bookDetails = BookDetails(1, "Pen", "200")
             ),
-            onDelete = {}
+            onDelete = {},
+            onBookEditClick = {},
+            modifier = Modifier
         )
     }
 }
