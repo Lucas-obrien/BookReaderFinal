@@ -15,9 +15,7 @@ import com.securis.myapplication.ui.BookEditDestination
 import com.securis.myapplication.ui.BookEditScreen
 import com.securis.myapplication.ui.BookEntryDestination
 import com.securis.myapplication.ui.BookEntryScreen
-import com.securis.myapplication.ui.BookManageDestination
 import com.securis.myapplication.ui.BookSearchDestination
-import com.securis.myapplication.ui.ManageBookScreen
 import com.securis.myapplication.ui.SearchBookScreen
 import com.securis.myapplication.ui.home.BookReaderHomeScreen
 import com.securis.myapplication.ui.home.HomeDestination
@@ -41,7 +39,7 @@ fun BookReaderNavHost(
             BookReaderHomeScreen(
                 navigateToBookEntry = { navController.navigate(BookEntryDestination.route) },
                 navigateToBookUpdate = { navController.navigate("${BookDetailsDestination.route}/$it") },
-                navigateToManageBooks = { navController.navigate(BookManageDestination.route) },
+//                navigateToSearchToEditBooks = { navController.navigate(BookManageDestination.route) },
                 navigateToSearchBooks = {navController.navigate(BookSearchDestination.route)},
                 modifier = Modifier,
                 viewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -60,7 +58,7 @@ fun BookReaderNavHost(
             })
         ) {
             BookDetailScreen(
-                navigateToDetailBook = { navController.navigate("${BookDetailsDestination.route}/$it") },
+                navigateToEditBook = { navController.navigate("${BookEditDestination.route}/$it") },
                 navigateBack = { navController.navigateUp() }
             )
         }
@@ -75,22 +73,13 @@ fun BookReaderNavHost(
                 onNavigateUp = { navController.navigateUp() }
             )
         }
-        composable(route = BookManageDestination.route) {
-//            val viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
-//            val uiState by viewModel.homeUiState.collectAsState()
-//
-            ManageBookScreen(
-                onBookEditClick = { bookId ->
-                    navController.navigate("${BookEditDestination.route}/$bookId")
-                }
-            )
 
-        }
         composable(route = BookSearchDestination.route) {
             SearchBookScreen(
                 onBookSearchClick = { bookId ->
-                    navController.navigate("${BookEditDestination.route}/$bookId")
+                    navController.navigate("${BookDetailsDestination.route}/$bookId")
                 }
+
             )
         }
     }
