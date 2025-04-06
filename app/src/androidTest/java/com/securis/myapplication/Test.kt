@@ -1,3 +1,5 @@
+package com.securis.myapplication
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -6,6 +8,7 @@ import com.securis.myapplication.data.Book
 import com.securis.myapplication.data.BookDao
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -78,4 +81,99 @@ class Test(){
         assertEquals(1, result.size)
         assertEquals("The Hobbit", result[0].title)
     }
+    @Test
+    fun countByTitleAndAuthor_returnsCorrectCount() = runTest {
+        val book = Book(title = "Sample", author = "Author", blurb = "", genre = "Genre", apiRating = 5)
+        dao.insertBook(book)
+
+        val count = dao.countByTitleAndAuthor("Sample", "Author")
+        assertEquals(1, count)
+    }
+
+
+    @Test
+    fun getRatedGenres_returnsGenresSortedByAverageUserRating() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "A", author = "X", blurb = "", genre = "Sci-fi", apiRating = 5, userRating = 4),
+            Book(title = "B", author = "Y", blurb = "", genre = "Fantasy", apiRating = 5, userRating = 5),
+            Book(title = "C", author = "Z", blurb = "", genre = "Sci-fi", apiRating = 5, userRating = 2)
+        ))
+
+        val genres = dao.getRatedGenres()
+        assertEquals(listOf("Fantasy", "Sci-fi"), genres)
+    }
+
+    @Test
+    fun getAllGenres_returnsAllDistinctGenres() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "A", author = "X", blurb = "", genre = "Sci-fi", apiRating = 5),
+            Book(title = "B", author = "Y", blurb = "", genre = "Fantasy", apiRating = 5),
+            Book(title = "C", author = "Z", blurb = "", genre = "Sci-fi", apiRating = 5)
+        ))
+
+        val genres = dao.getAllGenres()
+        assertTrue(genres.contains("Sci-fi"))
+        assertTrue(genres.contains("Fantasy"))
+    }
+    @Test
+    fun getUnreadBooksByGenre_returnsCorrectList() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "1", author = "A", blurb = "", genre = "Mystery", apiRating = 5, read = false),
+            Book(title = "2", author = "B", blurb = "", genre = "Mystery", apiRating = 5, read = false),
+            Book(title = "3", author = "C", blurb = "", genre = "Mystery", apiRating = 5, read = true)
+        ))
+
+        val unread = dao.getUnreadBooksByGenre("Mystery")
+        assertEquals(2, unread.size)
+    }
+    @Test
+    fun getReadCount_returnsCorrectNumber() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "Read", author = "", blurb = "", genre = "", apiRating = 5, read = true),
+            Book(title = "Unread", author = "", blurb = "", genre = "", apiRating = 5, read = false)
+        ))
+
+        val count = dao.getReadCount()
+        assertEquals(1, count)
+    }
+    @Test
+    fun getStartedCount_returnsCorrectNumber() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "Started", author = "", blurb = "", genre = "", apiRating = 5, started = true),
+            Book(title = "Finished", author = "", blurb = "", genre = "", apiRating = 5, started = true, read = true),
+            Book(title = "Not Started", author = "", blurb = "", genre = "", apiRating = 5, started = false)
+        ))
+
+        val count = dao.getStartedCount()
+        assertEquals(1, count)
+    }
+    @Test
+    fun getNotStartedCount_returnsCorrectNumber() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "NotStarted", author = "", blurb = "", genre = "", apiRating = 5),
+            Book(title = "Started", author = "", blurb = "", genre = "", apiRating = 5, started = true)
+        ))
+
+        val count = dao.getNotStartedCount()
+        assertEquals(1, count)
+    }
+    @Test
+    fun getAllUnreadBooks_returnsUnreadBooksOnly() = runTest {
+        dao.insertAll(listOf(
+            Book(title = "Unread1", author = "", blurb = "", genre = "", apiRating = 5, read = false),
+            Book(title = "Read", author = "", blurb = "", genre = "", apiRating = 5, read = true)
+        ))
+
+        val result = dao.getAllUnreadBooks()
+        assertEquals(1, result.size)
+        assertEquals("Unread1", result[0].title)
+    }
+
+
+
+
+
+
+
+
 }
