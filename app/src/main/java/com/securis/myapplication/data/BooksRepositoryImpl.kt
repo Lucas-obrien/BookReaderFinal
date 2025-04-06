@@ -2,34 +2,14 @@ package com.securis.myapplication.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import prepopulateBooksFromApi
 
 class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
 
-    // Function to insert 10 books into the database
-    override suspend fun addBooks() {
-        val books = listOf(
-            Book(id = 1, title = "1984", author = "George Orwell", blurb = "Its okay", genre = "Dystopian", ApiRating = 5),
-            Book(id = 2, title = "Brave New World", author = "Aldous Huxley", blurb = "Its okay", genre = "Science Fiction", ApiRating = 5),
-            Book(id = 3, title = "Fahrenheit 451", author = "Ray Bradbury", blurb = "Its okay", genre = "Dystopian", ApiRating = 5),
-            Book(id = 4, title = "The Great Gatsby", author = "F. Scott Fitzgerald", blurb = "Its okay", genre = "Fiction", ApiRating = 5),
-            Book(id = 5, title = "Moby Dick", author = "Herman Melville", blurb = "Its okay", genre = "Fiction", ApiRating = 5),
-            Book(id = 6, title = "War and Peace", author = "Leo Tolstoy", blurb = "Its okay", genre = "Historical Fiction", ApiRating = 5),
-            Book(id = 7, title = "The Catcher in the Rye", author = "J.D. Salinger", blurb = "Its okay", genre = "Historical Fiction", ApiRating = 5),
-            Book(id = 8, title = "Pride and Prejudice", author = "Jane Austen", blurb = "Its okay", genre = "Fiction", ApiRating = 5),
-            Book(id = 9, title = "The Hobbit", author = "J.R.R. Tolkien", blurb = "Its okay", genre = "Fantasy Fiction", ApiRating = 5),
-            Book(id = 10, title = "The Lord of the Rings", author = "J.R.R. Tolkien", blurb = "Its okay", genre = "Fantasy Fiction", ApiRating = 5)
-        )
-
-        withContext(Dispatchers.IO) {
-            bookDao.insertAll(books) // Insert all books into the database
-        }
-    }
-
     // Function to return a Flow of List<Book>
     override fun getAllBooksStream(): Flow<List<Book>> {
-        return bookDao.getAllBooks() // This should return a Flow<List<Book>>
+        return bookDao.getAllBooks()
     }
 
     override suspend fun updateBook(book: Book) {
@@ -37,7 +17,7 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
     }
 
     override fun getBookStream(id: Int): Flow<Book?> {
-        return bookDao.getBook(id) // Assuming bookDao is a Room DAO
+        return bookDao.getBook(id)
     }
 
     override suspend fun deleteBook(book: Book) {
@@ -48,12 +28,39 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
     // Function to insert a single book into the data source
     override suspend fun insertBook(book: Book) {
         withContext(Dispatchers.IO) {
-            bookDao.insertBook(book) // Insert a single book
+            bookDao.insertBook(book)
         }
     }
 
-    override fun getFirstThreeBooksStream(): Flow<List<Book>> {
-        return bookDao.getFirstThreeBooks()
+    override fun getFirstThreeBooksStream(): Flow<List<Book>> = flow {
+        val maxGenres = 3
+        val booksPerGenre = 1
+
+        val ratedGenres = bookDao.getRatedGenres()
+        val allGenres = bookDao.getAllGenres()
+        val unratedGenres = allGenres.filterNot { it in ratedGenres }
+
+        val shuffledGenres = (ratedGenres + unratedGenres).distinct().shuffled()
+
+        val validGenres = mutableListOf<String>()
+        for (genre in shuffledGenres) {
+            val unread = bookDao.getUnreadBooksByGenre(genre)
+            if (unread.isNotEmpty()) {
+                validGenres.add(genre)
+            }
+            if (validGenres.size == maxGenres) break
+        }
+
+        if (validGenres.isNotEmpty()) {
+            val books = validGenres.flatMap { genre ->
+                bookDao.getUnreadBooksByGenre(genre).shuffled().take(booksPerGenre)
+            }
+            emit(books)
+        } else {
+            // No valid genres with unread books — fallback
+            val allUnreadBooks = bookDao.getAllUnreadBooks()
+            emit(allUnreadBooks.shuffled().take(3))
+        }
     }
 
     override fun searchBooksByTitle(query: String): Flow<List<Book>> {
@@ -74,6 +81,50 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
 
     override suspend fun refreshBooksFromApi() {
         prepopulateBooksFromApi(bookDao)
+    }
+
+    override fun getTopUnreadBooks(): Flow<List<Book>> = flow {
+        val maxGenres = 3
+        val booksPerGenre = 5
+
+        val ratedGenres = bookDao.getRatedGenres()
+        val allGenres = bookDao.getAllGenres()
+        val unratedGenres = allGenres.filterNot { it in ratedGenres }
+
+        // Shuffle all genres to allow random fallback options
+        val allShuffledGenres = (ratedGenres + unratedGenres).distinct().shuffled()
+
+        val validGenres = mutableListOf<String>()
+        for (genre in allShuffledGenres) {
+            val books = bookDao.getUnreadBooksByGenre(genre)
+            if (books.isNotEmpty()) {
+                validGenres.add(genre)
+            }
+            if (validGenres.size == maxGenres) break
+        }
+
+        val selectedBooks = validGenres.flatMap { genre ->
+            bookDao.getUnreadBooksByGenre(genre).shuffled().take(booksPerGenre)
+        }
+
+        emit(selectedBooks)
+    }
+
+
+    override suspend fun getReadCount(): Int {
+        return bookDao.getReadCount()
+    }
+
+    override suspend fun getStartedCount(): Int {
+        return bookDao.getStartedCount()
+    }
+
+    override suspend fun getNotStartedCount(): Int {
+        return bookDao.getNotStartedCount()
+    }
+
+    override suspend fun getAllUnreadBooks(): List<Book> {
+        return bookDao.getAllUnreadBooks()
     }
 
 }
