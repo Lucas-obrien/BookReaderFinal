@@ -1,4 +1,3 @@
-// OpenLibraryApi.kt
 package com.securis.myapplication.ui.network
 
 import retrofit2.http.GET

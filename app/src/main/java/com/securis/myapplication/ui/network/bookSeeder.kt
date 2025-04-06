@@ -8,7 +8,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-suspend fun prepopulateBooksFromApi(bookDao: BookDao) = withContext(Dispatchers.IO) {
+
+// THIS IS FOR USE WITH OPEN LIBRARY, HOWEVER OPEN LIBRARY HAS SIGNIFICANT NO. OF MISSING VALUES
+suspend fun prepopulateBooksFromOpenAPI(bookDao: BookDao) = withContext(Dispatchers.IO) {
     try {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://openlibrary.org/")
@@ -31,12 +33,17 @@ suspend fun prepopulateBooksFromApi(bookDao: BookDao) = withContext(Dispatchers.
                 val exists = bookDao.countByTitleAndAuthor(title, author) > 0
                 if (exists) return@mapNotNull null
 
+                var genre = doc.subject?.firstOrNull() ?: "General Fiction"
+                if (genre.equals("Unknown", ignoreCase = true)) {
+                    genre = "General Fiction"
+                }
+
                 Book(
                     title = title,
                     author = author,
                     blurb = "No blurb available.",
-                    genre = doc.subject?.firstOrNull() ?: "Unknown",
-                    ApiRating = 3, // Open Library doesn't provide this
+                    genre = genre,
+                    apiRating = 3, // Open Library doesn't provide this
                     userRating = null,
                     userReview = null,
                     read = false

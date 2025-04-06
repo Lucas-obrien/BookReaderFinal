@@ -1,4 +1,3 @@
-// OpenLibraryResponse.kt
 package com.securis.myapplication.ui.network
 
 data class OpenLibraryResponse(
