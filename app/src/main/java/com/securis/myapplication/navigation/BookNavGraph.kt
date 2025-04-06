@@ -1,5 +1,7 @@
 package com.example.inventory.ui.navigation
 
+import com.securis.myapplication.ui.screens.BookStatsDestination
+import com.securis.myapplication.ui.screens.StatsScreenRoute
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -8,17 +10,19 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.securis.myapplication.ui.AppViewModelProvider
-import com.securis.myapplication.ui.BookDetailScreen
-import com.securis.myapplication.ui.BookDetailsDestination
-import com.securis.myapplication.ui.BookEditDestination
-import com.securis.myapplication.ui.BookEditScreen
-import com.securis.myapplication.ui.BookEntryDestination
-import com.securis.myapplication.ui.BookEntryScreen
-import com.securis.myapplication.ui.BookSearchDestination
-import com.securis.myapplication.ui.SearchBookScreen
-import com.securis.myapplication.ui.home.BookReaderHomeScreen
-import com.securis.myapplication.ui.home.HomeDestination
+import com.securis.myapplication.ui.viewModels.AppViewModelProvider
+import com.securis.myapplication.ui.screens.BookDetailScreen
+import com.securis.myapplication.ui.screens.BookDetailsDestination
+import com.securis.myapplication.ui.screens.BookEditDestination
+import com.securis.myapplication.ui.screens.BookEditScreen
+import com.securis.myapplication.ui.screens.BookEntryDestination
+import com.securis.myapplication.ui.screens.BookEntryScreen
+import com.securis.myapplication.ui.screens.BookRecommendDestination
+import com.securis.myapplication.ui.screens.BookSearchDestination
+import com.securis.myapplication.ui.screens.RecommendedBookScreen
+import com.securis.myapplication.ui.screens.SearchBookScreen
+import com.securis.myapplication.ui.screens.BookReaderHomeScreen
+import com.securis.myapplication.ui.screens.HomeDestination
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -37,10 +41,10 @@ fun BookReaderNavHost(
     ) {
         composable(route = HomeDestination.route) {
             BookReaderHomeScreen(
-                navigateToBookEntry = { navController.navigate(BookEntryDestination.route) },
                 navigateToBookUpdate = { navController.navigate("${BookDetailsDestination.route}/$it") },
-//                navigateToSearchToEditBooks = { navController.navigate(BookManageDestination.route) },
-                navigateToSearchBooks = {navController.navigate(BookSearchDestination.route)},
+                navigateToSearchBooks = { navController.navigate(BookSearchDestination.route) },
+                navigateToRecommendedBooks = {navController.navigate(BookRecommendDestination.route)},
+                navigateToStats = {navController.navigate(BookStatsDestination.route)},
                 modifier = Modifier,
                 viewModel = viewModel(factory = AppViewModelProvider.Factory)
             )
@@ -76,10 +80,25 @@ fun BookReaderNavHost(
 
         composable(route = BookSearchDestination.route) {
             SearchBookScreen(
+                navigateToBookEntry = { navController.navigate(BookEntryDestination.route) },
                 onBookSearchClick = { bookId ->
                     navController.navigate("${BookDetailsDestination.route}/$bookId")
-                }
+                },
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(route = BookRecommendDestination.route){
+            RecommendedBookScreen(
+                onBookSearchClick = { bookId ->
+                    navController.navigate("${BookDetailsDestination.route}/$bookId")
+                },
+                navigateBack = { navController.popBackStack() }
 
+            )
+        }
+        composable(route = BookStatsDestination.route){
+            StatsScreenRoute(
+                navigateBack = { navController.popBackStack() },
             )
         }
     }
