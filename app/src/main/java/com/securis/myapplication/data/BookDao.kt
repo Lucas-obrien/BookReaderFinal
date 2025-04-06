@@ -11,6 +11,9 @@ interface BookDao {
     @Query("SELECT * FROM book_database")
     fun getAllBooks(): Flow<List<Book>>
 
+    @Query("SELECT * FROM book_database WHERE read = 0")
+    fun getAllUnreadBooksFlow(): Flow<List<Book>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(books: List<Book>)
 

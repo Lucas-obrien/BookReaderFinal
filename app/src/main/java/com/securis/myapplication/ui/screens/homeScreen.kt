@@ -85,7 +85,6 @@ fun BookReaderHomeScreen(
         )
     }
 }
-
 @Composable
 private fun HomeBody(
     bookList: List<Book>,
@@ -103,47 +102,41 @@ private fun HomeBody(
         modifier = modifier
             .padding(contentPadding)
             .fillMaxSize(),
+        verticalArrangement = Arrangement.Top
     ) {
-        if (bookList.isEmpty()) {
+        if (bookList.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .heightIn(max = maxListHeight)
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            ) {
+                items(bookList, key = { it.id }) { book ->
+                    BookItem(
+                        book = book,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onBookClick(book.id) }
+                    )
+                }
+            }
+        } else {
             Text(
                 text = stringResource(R.string.no_item_description),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
             )
-        } else {
-            Column(
-                modifier = modifier
-                    .padding(contentPadding)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Top
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .heightIn(max = maxListHeight)
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
-                    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
-                ) {
-                    items(bookList, key = { it.id }) { book ->
-                        BookItem(
-                            book = book,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onBookClick(book.id) }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                SearchButton(onClick = onSearchBooksClick)
-                Spacer(modifier = Modifier.height(16.dp))
-                RecommendedButton(onClick = onRecommendedButtonClick)
-                Spacer(modifier = Modifier.height(16.dp))
-                StatisticsButton(onClick = onStatsButtonClick)
-            }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        SearchButton(onClick = onSearchBooksClick)
+        Spacer(modifier = Modifier.height(16.dp))
+        RecommendedButton(onClick = onRecommendedButtonClick)
+        Spacer(modifier = Modifier.height(16.dp))
+        StatisticsButton(onClick = onStatsButtonClick)
     }
 }
 

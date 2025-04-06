@@ -3,6 +3,7 @@ package com.securis.myapplication.data
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
@@ -32,36 +33,36 @@ class BooksRepositoryImpl(private val bookDao: BookDao) : BooksRepository {
         }
     }
 
-    override fun getFirstThreeBooksStream(): Flow<List<Book>> = flow {
-        val maxGenres = 3
-        val booksPerGenre = 1
+    override fun getFirstThreeBooksStream(): Flow<List<Book>> =
+        bookDao.getAllUnreadBooksFlow().map { unreadBooks ->
+            val maxGenres = 3
+            val booksPerGenre = 1
 
-        val ratedGenres = bookDao.getRatedGenres()
-        val allGenres = bookDao.getAllGenres()
-        val unratedGenres = allGenres.filterNot { it in ratedGenres }
+            val ratedGenres = bookDao.getRatedGenres()
+            val allGenres = bookDao.getAllGenres()
+            val unratedGenres = allGenres.filterNot { it in ratedGenres }
 
-        val shuffledGenres = (ratedGenres + unratedGenres).distinct().shuffled()
+            val shuffledGenres = (ratedGenres + unratedGenres).distinct().shuffled()
 
-        val validGenres = mutableListOf<String>()
-        for (genre in shuffledGenres) {
-            val unread = bookDao.getUnreadBooksByGenre(genre)
-            if (unread.isNotEmpty()) {
-                validGenres.add(genre)
+            val validGenres = mutableListOf<String>()
+            for (genre in shuffledGenres) {
+                if (unreadBooks.any { it.genre == genre }) {
+                    validGenres.add(genre)
+                }
+                if (validGenres.size == maxGenres) break
             }
-            if (validGenres.size == maxGenres) break
+
+            val selectedBooks = validGenres.flatMap { genre ->
+                unreadBooks.filter { it.genre == genre }.shuffled().take(booksPerGenre)
+            }
+
+            if (selectedBooks.isEmpty()) {
+                unreadBooks.shuffled().take(3)
+            } else {
+                selectedBooks
+            }
         }
 
-        if (validGenres.isNotEmpty()) {
-            val books = validGenres.flatMap { genre ->
-                bookDao.getUnreadBooksByGenre(genre).shuffled().take(booksPerGenre)
-            }
-            emit(books)
-        } else {
-            // No valid genres with unread books — fallback
-            val allUnreadBooks = bookDao.getAllUnreadBooks()
-            emit(allUnreadBooks.shuffled().take(3))
-        }
-    }
 
     override fun searchBooksByTitle(query: String): Flow<List<Book>> {
         return bookDao.searchBooksByTitle(query)
