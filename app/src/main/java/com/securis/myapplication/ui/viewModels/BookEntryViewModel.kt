@@ -1,4 +1,4 @@
-package com.securis.myapplication.ui
+package com.securis.myapplication.ui.viewModels
 
 
 import androidx.compose.runtime.getValue
@@ -48,7 +48,8 @@ data class BookDetails(
     val rating: Int = 0,
     val userReview: String = "",
     val userRating: Int = 0,
-    val read: Boolean = false
+    val read: Boolean = false,
+    val started: Boolean = false
 )
 
 fun BookDetails.toBook(): Book =  Book(
@@ -57,10 +58,11 @@ fun BookDetails.toBook(): Book =  Book(
     author = author,
     blurb = blurb,
     genre = genre,
-    ApiRating = rating,
+    apiRating = rating,
     userReview = userReview,
     userRating = userRating,
-    read = read
+    read = read,
+    started = started
 
 )
 
@@ -75,10 +77,9 @@ fun Book.toBookDetails(): BookDetails = BookDetails(
     author = author,
     blurb = blurb,
     genre = genre,
-    rating = ApiRating,
+    rating = apiRating,
     userReview = userReview ?:"",
     userRating = userRating ?:0,
-    read = read
+    read = read,
+    started = started
 )
-
-

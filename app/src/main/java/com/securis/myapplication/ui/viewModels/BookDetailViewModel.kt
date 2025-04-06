@@ -1,4 +1,4 @@
-package com.securis.myapplication.ui
+package com.securis.myapplication.ui.viewModels
 
 
 import androidx.lifecycle.SavedStateHandle
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.securis.myapplication.data.Book
 import com.securis.myapplication.data.BooksRepository
+import com.securis.myapplication.ui.screens.BookDetailsDestination
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
@@ -42,21 +43,16 @@ class BookDetailViewModel(
             booksRepository.deleteBook(book)
         }
     }
+    fun markBookAsStarted(book: Book) {
+        viewModelScope.launch {
+            val updatedBook = book.copy(started = true)
+            booksRepository.updateBook(updatedBook)
+        }
+    }
+
 }
 
 
 data class BookDetailsUiState(
     val bookDetails: BookDetails = BookDetails()
 )
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-package com.securis.myapplication.ui
+package com.securis.myapplication.ui.viewModels
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.securis.myapplication.data.BooksRepository
+import com.securis.myapplication.ui.screens.BookEditDestination
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.firstOrNull
 
