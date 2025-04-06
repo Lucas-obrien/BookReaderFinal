@@ -10,11 +10,12 @@ data class Book(
     val author: String,
     val blurb: String,
     val genre: String,
-    val ApiRating: Int,
+    val apiRating: Int,
     val userRating: Int? = null,
-    val ApiReview: String? = null,
+    val apiReview: String? = null,
     val userReview: String? = null,
-    val read: Boolean = false
+    val read: Boolean = false,
+    val started: Boolean = false
 ) {
 
 }
