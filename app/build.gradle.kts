@@ -45,14 +45,15 @@ android {
 
 dependencies {
     // ✅ Room (fixed syntax)
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    androidTestImplementation(libs.androidx.core.testing)
+    kapt(libs.androidx.room.compiler)
+    androidTestImplementation(libs.androidx.room.testing)
 
     // ✅ Lifecycle & LiveData
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")// Stick with this version for stability
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")// Stick with this version for stability
 
     // ✅ Jetpack Compose and related libraries
     implementation(libs.androidx.core.ktx)
@@ -66,13 +67,27 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Stick with this version for stability
     // Retrofit with Scalar Converter
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.converter.scalars)
+    implementation(libs.converter.gson)
+
+    implementation(libs.squareup.retrofit)
+
+    // Gson Converter for Retrofit
+    implementation(libs.converter.gson)
 
 
     // ✅ Testing
+    // Unit testing
+    // Architecture components testing - for InstantTaskExecutorRule
+    testImplementation(libs.androidx.core.testing)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.junit)
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.slf4j.simple)
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,4 +96,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("test"))
 }

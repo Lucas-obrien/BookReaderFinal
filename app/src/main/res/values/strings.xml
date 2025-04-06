@@ -65,4 +65,36 @@
 
     <string name="Archery">Archery</string>
     <string name="ArcheryReview">Mastering precision in archery</string>
+    <string name="book_detail_title">Book Details</string>
+    <string name="edit_book_title">Edit Book</string>
+    <string name="delete">Delete</string>
+    <string name="book">Book</string>
+    <string name="author">Author</string>
+    <string name="attention">ATTENTION</string>
+    <string name="delete_question">Are you sure?</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="save_action">SAVE</string>
+    <string name="book_title_req">Book Title</string>
+    <string name="book_author_req">Author</string>
+    <string name="book_genre_req">Genre</string>
+    <string name="book_review_req">Review</string>
+    <string name="book_rating_req">Rating</string>
+
+    <string name="required_fields">required fields</string>
+    <string name="book_edit_title">Edit book</string>
+    <string name="genre">Genre</string>
+    <string name="review">Review</string>
+    <string name="rating">Other Readers Rating</string>
+    <string name="search_book_title">Search</string>
+    <string name="blurb">Blurb</string>
+    <string name="your_review">Your review</string>
+    <string name="user_rating">Your Rating</string>
+    <string name="user_read">Read this book</string>
+    <string name="edit_book">Edit Book</string>
+    <string name="recommended_book_title">Recommended books</string>
+    <string name="stats_title">Book Statistics</string>
+    <string name="book_statistics_title">Statistics</string>
+    <string name="start_reading">Start Reading</string>
+    <string name="user_started">Started Reading</string>
 </resources>

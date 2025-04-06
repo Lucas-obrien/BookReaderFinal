@@ -3,17 +3,40 @@ import android.os.Build
 import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+private val WarmIvory = Color(0xFFFDF6EC)
+val SoftBeige = Color(0xFFF4E9DB) // Button background
+val TextBrown = Color(0xFF4E4036) // Button text
+
+data class CustomColors(
+    val buttonBackground: Color,
+    val buttonText: Color
+)
+val LightCustomColors = CustomColors(
+    buttonBackground = SoftBeige,
+    buttonText = TextBrown
+)
+
+val DarkCustomColors = CustomColors(
+    buttonBackground = Color.DarkGray,
+    buttonText = Color.White
+)
+
+val LocalCustomColors = staticCompositionLocalOf { LightCustomColors }
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
@@ -33,9 +56,9 @@ private val LightColorScheme = lightColorScheme(
     errorContainer = md_theme_light_errorContainer,
     onErrorContainer = md_theme_light_onErrorContainer,
     outline = md_theme_light_outline,
-    background = md_theme_light_background,
+    background = WarmIvory, // Updated
     onBackground = md_theme_light_onBackground,
-    surface = md_theme_light_surface,
+    surface = WarmIvory, // Updated
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
@@ -85,6 +108,14 @@ fun BookReaderTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+
+    CompositionLocalProvider(LocalCustomColors provides if (darkTheme) DarkCustomColors else LightCustomColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
